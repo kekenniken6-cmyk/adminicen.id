@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Pesanan</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .content {
+     max-width: 1400px;
+     margin: 20px auto;
+     padding: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f4f4f4;
+    }
+    button {
+      padding: 6px 10px;
+      cursor: pointer;
+    }
+    select {
+      padding: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="product.html">Produk</a>
+  <a href="orders.html">Pesanan</a>
+</nav>
+
+<div class="content">
+  <h1>Daftar Pesanan</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nama</th>
+        <th>Alamat</th>
+        <th>Total</th>
+        <th>Pembayaran</th>
+        <th>Status</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+    <tbody id="order-list">
+      <tr>
+        <td colspan="7">Belum ada pesanan</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const orderList = document.getElementById("order-list");
+  let orders = JSON.parse(localStorage.getItem("orders")) || [];
+
+  function renderOrders() {
+    orderList.innerHTML = "";
+
+    if (orders.length === 0) {
+      orderList.innerHTML = `<tr><td colspan="7">Belum ada pesanan</td></tr>`;
+      return;
+    }
+
+    orders.forEach((o, i) => {
+      orderList.innerHTML += `
+        <tr>
+          <td>${o.id}</td>
+          <td>${o.customer?.name || "-"}</td>
+          <td>${o.customer?.address || "-"}</td>
+          <td>Rp ${Number(o.total).toLocaleString("id-ID")}</td>
+          <td>${o.payment || "-"}</td>
+          <td>
+            <select onchange="updateStatus(${i}, this.value)">
+              <option ${o.status === "Pesanan Baru" ? "selected" : ""}>Pesanan Baru</option>
+              <option ${o.status === "Diproses" ? "selected" : ""}>Diproses</option>
+              <option ${o.status === "Selesai" ? "selected" : ""}>Selesai</option>
+            </select>
+          </td>
+          <td>
+            <button onclick="deleteOrder(${i})">Hapus</button>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  function updateStatus(index, status) {
+    orders[index].status = status;
+    localStorage.setItem("orders", JSON.stringify(orders));
+  }
+
+  function deleteOrder(index) {
+    if (confirm("Hapus pesanan ini?")) {
+      orders.splice(index, 1);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      renderOrders();
+    }
+  }
+
+  renderOrders();
+</script>
+
+</body>
+</html>

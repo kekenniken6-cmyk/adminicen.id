@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard Admin</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a href="dashboard.html">Dashboard</a>
+  <a href="product.html">Produk</a>
+  <a href="orders.html">Pesanan</a>
+  <a href="#" onclick="logout()">Logout</a>
+</nav>
+
+<div class="content">
+  <h1>Dashboard Admin</h1>
+  <p>Selamat datang di Admin NikenShopp</p>
+</div>
+
+<script>
+function logout() {
+  localStorage.removeItem("adminLogin");
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>
